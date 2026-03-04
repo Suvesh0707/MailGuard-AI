@@ -1,0 +1,24 @@
+{
+  "name": "suvesh-mail-guard",
+  "version": "1.0.0",
+  "description": "Smart disposable email & risk detection engine",
+  "main": "index.cjs.js",
+  "module": "index.js",
+  "type": "module",
+  "files": [
+    "index.js",
+    "index.cjs.js",
+    "riskEngine.js",
+    "validator.js",
+    "domainAge.js",
+    "domainEntropy.js",
+    "freeProviders.js",
+    "suspiciousTlds.js",
+    "disposableDomains.json"
+  ],
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Suvesh Pagam",
+  "license": "ISC"
+}
