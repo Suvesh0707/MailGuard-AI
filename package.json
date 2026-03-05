@@ -1,6 +1,6 @@
 {
   "name": "suvesh-mail-guard",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Smart disposable email & risk detection engine",
   "main": "index.cjs",
   "module": "index.js",
