@@ -1,4 +1,2 @@
-// index.js
-import  {validateEmail}  from "./riskEngine";
-
-export { validateEmail };
+export { validateEmail, validateEmailsBatch } from "./riskEngine.js";
+export { updateDisposableDomains, scheduleDisposableDomainUpdates } from "./updater.js";
