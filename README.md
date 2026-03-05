@@ -1,7 +1,6 @@
-## Author
-Suvesh Pagam
-
 # suvesh-mail-guard
+
+Author: Suvesh Pagam
 
 Smart disposable email and risk detection engine with daily blocklist updates. Supports both ES Modules and CommonJS consumers.
 
@@ -17,12 +16,7 @@ Smart disposable email and risk detection engine with daily blocklist updates. S
 ```bash
 npm install suvesh-mail-guard
 ```
-
-For local development via linking:
-```bash
-cd suvesh-mail-guard && npm link
-cd your-backend && npm link suvesh-mail-guard
-```
+Then import and use it as shown below for your module system.
 
 ## Usage (ESM)
 ```js
@@ -69,7 +63,37 @@ const guard = require("suvesh-mail-guard");
 
 ## API
 - `validateEmail(email, options?)`
-  - Returns: `{ email, isDisposable, score, riskLevel, reason, mxExists, entropy, ageInDays, isFreeProvider, tldSuspicious, catchAll }`
+  - Returns core fields:
+    - `email`, `isDisposable`, `score` (alias: `riskScore`), `riskLevel`, `reason`
+    - `mxExists`, `entropy`, `ageInDays`, `isFreeProvider`, `tldSuspicious`, `catchAll`
+  - Also returns a `checks` object that summarizes all layers:
+    - `syntaxValidation`: boolean
+    - `domainExtraction`: `{ local, domain }`
+    - `globalBlacklist`: boolean
+    - `customBlacklist`: boolean
+    - `disposableProvider`: boolean
+    - `mxRecord`: boolean
+    - `suspiciousTLD`: boolean
+    - `domainEntropy`: `"high" | "normal"`
+    - `domainAge`: `"<N> days" | "unknown"`
+    - `domainReputation`: boolean
+    - `roleBased`: boolean
+    - `usernamePattern`: `"high" | "normal"`
+    - `emailLengthStructure`: boolean
+    - `subdomainAbuse`: boolean
+    - `homographRisk`: boolean
+    - `catchAllDomain`: boolean | null (null when disabled)
+    - `educationalDomainTrust`: boolean
+    - `governmentDomainTrust`: boolean
+    - `corporateDomainTrust`: boolean
+    - `disposableDomainPattern`: boolean
+    - `smtpMailboxVerification`: null
+    - `ipReputation`: null
+    - `botRegistrationBehavior`: null
+    - `emailFrequency`: null
+    - `riskScoringEngine`: `"active"`
+    - `addedToFlaggedList`: boolean
+    - `mediumQueuedForReview`: boolean
 - `validateEmailsBatch(emails, options?)`
   - Promise of `validateEmail` results for each email
 - `updateDisposableDomains()`
@@ -82,6 +106,19 @@ const guard = require("suvesh-mail-guard");
 - `customBlacklist?: string[]`
 - `enableCatchAllCheck?: boolean`
 - `signalWeights?: Partial<{ disposable; customBlacklist; mx; tld; entropy; age30; age90; freeProvider; educational; }>`
+
+## Auto‑Flagging and Storage
+- High risk results automatically append the domain to `disposableDomains.json` and add the email to `flaggedEmails.json`.
+- Medium risk results add the email to `flaggedEmails.json` for review (blocklist is not modified).
+- Files are stored in the package directory and hot‑reloaded by the validator.
+
+Example:
+```js
+const r = await validateEmail("user@hidingmail.com");
+console.log(r.riskLevel);       // "high"
+console.log(r.checks.addedToFlaggedList);        // true
+console.log(r.checks.disposableDomainPattern);   // true
+```
 
 ## Data Source and Update Strategy
 Source: https://github.com/disposable-email-domains/disposable-email-domains
@@ -99,6 +136,7 @@ npm run update:domains
 - Requires Node.js 18+
 - DNS lookups rely on system DNS and may be affected by transient errors
 - Per-domain rate limiting avoids excessive network calls
+ - WHOIS (port 43) is used to compute `domainAge`; if unreachable or unsupported, age will be `unknown`.
 
 ## License
 ISC

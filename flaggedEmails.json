@@ -1,0 +1,32 @@
+[
+  {
+    "email": "zzz.com",
+    "domain": "",
+    "riskLevel": "high",
+    "ts": 1772712818468
+  },
+  {
+    "email": "cikefa2167@cslua.com",
+    "domain": "cslua.com",
+    "riskLevel": "high",
+    "ts": 1772713128920
+  },
+  {
+    "email": "flying.frog.gpzb@hidingmail.com",
+    "domain": "hidingmail.com",
+    "riskLevel": "high",
+    "ts": 1772713589645
+  },
+  {
+    "email": "disgusted.marsupial.lijb@hidingmail.com",
+    "domain": "hidingmail.com",
+    "riskLevel": "high",
+    "ts": 1772714002510
+  },
+  {
+    "email": "cikefa2167@cslura.com",
+    "domain": "cslura.com",
+    "riskLevel": "medium",
+    "ts": 1772714056395
+  }
+]

@@ -1,6 +1,6 @@
 {
   "name": "suvesh-mail-guard",
-  "version": "1.0.5",
+  "version": "1.0.9",
   "description": "Smart disposable email & risk detection engine",
   "main": "index.cjs",
   "module": "index.js",
@@ -15,13 +15,15 @@
     "index.js",
     "index.cjs",
     "updater.js",
+    "storage.js",
     "riskEngine.js",
     "validator.js",
     "domainAge.js",
     "domainEntropy.js",
     "freeProviders.js",
     "suspiciousTlds.js",
-    "disposableDomains.json"
+    "disposableDomains.json",
+    "flaggedEmails.json"
   ],
   "scripts": {
     "start": "node server.js",
