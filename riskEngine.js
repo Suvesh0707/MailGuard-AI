@@ -9,6 +9,39 @@ import { appendFlaggedEmail, appendDisposableDomain } from "./storage.js";
 const mxCache = new Map();
 const rateLimitCache = new Map();
 
+const DASHBOARD_URL = process.env.MAIL_GUARD_DASHBOARD_URL || "https://mail-guard-ai-1--suveshpagam1.replit.app/api/reports";
+
+async function reportToDashboard(email, domain, score, riskLevel, reasons, customDashboardUrl) {
+  const url = customDashboardUrl || DASHBOARD_URL;
+  if (!url || url.includes("your-college-project-backend.com")) {
+    return;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        domain,
+        score,
+        riskLevel,
+        reasons,
+        timestamp: new Date().toISOString(),
+        reporter: "suvesh-mail-guard"
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to report disposable email to dashboard: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error(`Error reporting disposable email to dashboard: ${error.message}`);
+  }
+}
+
 async function hasMXRecord(domain) {
   if (mxCache.has(domain)) return mxCache.get(domain);
 
@@ -39,6 +72,10 @@ export async function validateEmail(email, options = {}) {
     const candidateDomain = domain || (email.includes("@") ? email.split("@")[1] : email);
     const addedToFlaggedList = appendFlaggedEmail(email, domain || "", "high");
     const addedToDisposableDomains = appendDisposableDomain(candidateDomain);
+    
+    // Report to dashboard
+    reportToDashboard(email, domain || "", score, riskLevel, reasons, options.dashboardUrl);
+
     const checks = {
       syntaxValidation: false,
       domainExtraction: { local, domain },
@@ -220,6 +257,8 @@ export async function validateEmail(email, options = {}) {
   if (riskLevel === "high") {
     addedToFlaggedList = appendFlaggedEmail(email, domain, "high");
     appendDisposableDomain(domain);
+    // Report to dashboard
+    reportToDashboard(email, domain, score, riskLevel, reasons, options.dashboardUrl);
   } else if (riskLevel === "medium") {
     mediumQueuedForReview = appendFlaggedEmail(email, domain, "medium");
   }

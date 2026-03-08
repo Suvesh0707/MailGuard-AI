@@ -28,5 +28,17 @@
     "domain": "cslura.com",
     "riskLevel": "medium",
     "ts": 1772714056395
+  },
+  {
+    "email": "test@0-mail.com",
+    "domain": "0-mail.com",
+    "riskLevel": "high",
+    "ts": 1772949975495
+  },
+  {
+    "email": "test@10minutemail.com",
+    "domain": "10minutemail.com",
+    "riskLevel": "high",
+    "ts": 1772951331446
   }
 ]
